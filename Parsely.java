@@ -3,24 +3,36 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
 import java.net.URLEncoder;
+import java.io.IOException;
 
 
 public class Parsely{
     private String apikey, secret;
     private ParselyAPIConnection conn;
 
-    public Parsely(String apikey, String secret, String root){
+    public Parsely(String apikey, String secret, String root) throws IOException{
         this.conn = new ParselyAPIConnection(apikey, secret, root);
         this.apikey = apikey;
         this.secret = secret;
+
+        if(!this.isAuthenticated()){
+            throw new IOException("Authentication failed");
+        }
     }
 
-    public Parsely(String apikey, String secret){
+    public Parsely(String apikey, String secret) throws IOException{
         this(apikey, secret, null);
     }
 
-    public Parsely(String apikey){
+    public Parsely(String apikey) throws IOException{
         this(apikey, null, null);
+    }
+
+    public boolean isAuthenticated(){
+        APIResult result = this.conn.requestEndpoint("/analytics/posts", null);
+        ArrayList<Post> arr = typeEntries(result.getData(),
+                                          ParselyModel.kAspect.kPost);
+        return arr.size() == 0 ? false : true;
     }
 
     public <T extends ParselyModel> ArrayList<T>
@@ -188,7 +200,12 @@ public class Parsely{
 
 
     public static void main(String[] args){
-        Parsely p = new Parsely(Secret.apikey, Secret.secret);
+        Parsely p = null;
+        try{
+            p = new Parsely(Secret.apikey, Secret.secret);
+        } catch(IOException e){
+            e.printStackTrace();
+        }
         RequestOptions options = RequestOptions.builder()
                                                .withLimit(7)
                                                .withDays(3)
@@ -211,8 +228,11 @@ public class Parsely{
     private ArrayList typeEntries(ArrayList<ParselyModel> entries,
                                   ParselyModel.kAspect aspect){
         ArrayList ret = new ArrayList();
-        for(ParselyModel pm : entries){
-            ret.add(pm.getAs(aspect));
+        try{
+            for(ParselyModel pm : entries){
+                ret.add(pm.getAs(aspect));
+            }
+        } catch(NullPointerException ex){
         }
         return ret;
     }
