@@ -25,7 +25,7 @@ public class Parsely{
 
     public <T extends ParselyModel> ArrayList<T>
     analytics(ParselyModel.kAspect aspect, RequestOptions options){
-        String _aspect = aspectToString(aspect, true);
+        String _aspect = ParselyModel.aspectToString(aspect, true);
 
         APIResult result = this.conn.requestEndpoint(
             String.format("/analytics/%s", _aspect), options);
@@ -47,7 +47,7 @@ public class Parsely{
     public ArrayList<Post> metaDetail(String meta,
                                       ParselyModel.kAspect aspect,
                                       RequestOptions options){
-        String aspect_string = aspectToString(aspect, false);
+        String aspect_string = ParselyModel.aspectToString(aspect, false);
         APIResult result = this.conn.requestEndpoint(
             String.format("/analytics/%s/%s/detail", aspect_string,
             URLEncoder.encode(meta)), options);
@@ -57,8 +57,8 @@ public class Parsely{
     public ArrayList<Post> metaDetail(ParselyModel meta_obj,
                                       ParselyModel.kAspect aspect,
                                       RequestOptions options){
-        // TODO - getattr(meta_obj, aspect_as_string)
-        return metaDetail("", aspect, options);
+        String value = (String)meta_obj.getField(ParselyModel.aspectToString(aspect, false));
+        return metaDetail(value, aspect, options);
     }
 
     public static void main(String[] args){
@@ -67,7 +67,9 @@ public class Parsely{
                                                .withDays(10)
                                                .build();
 
-        System.out.println(p.metaDetail("Technology Lab", ParselyModel.kAspect.kSection, options));
+        ArrayList<Post> posts = p.analytics(ParselyModel.kAspect.kPost, options);
+
+        System.out.println(p.metaDetail(posts.get(0), ParselyModel.kAspect.kSection, options));
     }
 
     private ArrayList typeEntries(ArrayList<ParselyModel> entries,
@@ -77,23 +79,5 @@ public class Parsely{
             ret.add(pm.getAs(aspect));
         }
         return ret;
-    }
-
-    private String aspectToString(ParselyModel.kAspect aspect, boolean plural){
-        switch(aspect){
-            case kPost:
-                if(plural) return "posts";
-                return "post";
-            case kAuthor:
-                if(plural) return "authors";
-                return "author";
-            case kSection:
-                if(plural) return "sections";
-                return "section";
-            case kTag:
-                if(plural) return "tags";
-                return "tag";
-        }
-        return null;
     }
 }

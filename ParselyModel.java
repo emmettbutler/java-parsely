@@ -59,6 +59,36 @@ public class ParselyModel{
     public Referrer getAsReferrer(){
         return new Referrer(this);
     }
+
+    public Object getField(String fieldname){
+        String value = null;
+        if(fieldname == "author"){
+            value = this.author;
+        } else if(fieldname == "section"){
+            value = this.section;
+        } else if(fieldname == "topic"){
+            value = this.topic;
+        }
+        return value;
+    }
+
+    public static String aspectToString(kAspect aspect, boolean plural){
+        switch(aspect){
+            case kPost:
+                if(plural) return "posts";
+                return "post";
+            case kAuthor:
+                if(plural) return "authors";
+                return "author";
+            case kSection:
+                if(plural) return "sections";
+                return "section";
+            case kTag:
+                if(plural) return "tags";
+                return "tag";
+        }
+        return null;
+    }
 }
 
 class Post extends ParselyModel{
@@ -196,4 +226,5 @@ class ModelDeserializer implements JsonDeserializer<ParselyModel> {
                            _metadata, _topic, _name, _hits, _shares, _tags);
         return pm;
     }
+
 }
