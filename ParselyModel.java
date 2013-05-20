@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.lang.reflect.Type;
 
 import com.google.gson.*;
@@ -9,7 +12,7 @@ public class ParselyModel{
     protected String url, title, section, author, metadata, topic, name, ref_type;
     protected int hits, shares;
     protected ArrayList<String> tags, thumb_urls;
-    //protected Date pub_date;
+    protected Date pub_date;
 
     public static enum kAspect{
         kPost, kAuthor, kSection, kTag, kReferrer
@@ -34,8 +37,8 @@ public class ParselyModel{
     public ParselyModel(){ }
 
     public ParselyModel(String url, String title, String section, String author,
-                String metadata, String topic, String name, String type, int hits, int shares,
-                ArrayList<String> tags){
+                String metadata, String topic, String name, String type,
+                Date date, int hits, int shares, ArrayList<String> tags){
         this.url = url;
         this.title = title;
         this.section = section;
@@ -47,6 +50,7 @@ public class ParselyModel{
         this.metadata = metadata;
         this.name = name;
         this.ref_type = type;
+        this.pub_date = date;
     }
 
     public <T extends ParselyModel> T getAs(kAspect aspect){
@@ -96,7 +100,7 @@ public class ParselyModel{
 
 class Post extends ParselyModel{
     public Post(String url, String title, String section, String author,
-                String metadata, int hits, int shares, ArrayList<String> tags){
+                String metadata, Date date, int hits, int shares, ArrayList<String> tags){
         this.url = url;
         this.title = title;
         this.section = section;
@@ -105,11 +109,12 @@ class Post extends ParselyModel{
         this.shares = shares;
         this.tags = tags;
         this.metadata = metadata;
+        this.pub_date = date;
     }
 
     public Post(ParselyModel pm){
         this(pm.url, pm.title, pm.section, pm.author, pm.metadata,
-             pm.hits, pm.shares, pm.tags
+             pm.pub_date, pm.hits, pm.shares, pm.tags
             );
     }
 
@@ -221,6 +226,16 @@ class ModelDeserializer implements JsonDeserializer<ParselyModel> {
             null : js.get("name").getAsString();
         String _ref_type = js.get("type") == null ?
             null : js.get("type").getAsString();
+
+        String datestring = js.get("pub_date") == null ?
+            null : js.get("pub_date").getAsString();
+        DateFormat formatter = new SimpleDateFormat("YYYY-MM-DD'T'HH:MM:SS");
+        Date _date = null;
+        try{
+            _date = formatter.parse(datestring);
+        } catch(Exception ex){
+        }
+
         int _shares = js.get("shares") == null ? 0 : js.get("shares").getAsInt();
         int _hits = js.get("_hits") == null ? 0 : js.get("_hits").getAsInt();
 
@@ -234,7 +249,7 @@ class ModelDeserializer implements JsonDeserializer<ParselyModel> {
         }
 
         ParselyModel pm = new ParselyModel(_url, _title, _section, _author,
-                           _metadata, _topic, _name, _ref_type, _hits, _shares, _tags);
+                           _metadata, _topic, _name, _ref_type, _date, _hits, _shares, _tags);
         return pm;
     }
 }
