@@ -9,6 +9,10 @@ public class ParselyModel{
     protected ArrayList<String> tags, thumb_urls;
     //protected Date pub_date;
 
+    public static enum kAspect{
+        kPost, kAuthor, kSection, kTag
+    };
+
     public ParselyModel(){ }
 
     public ParselyModel(String url, String title, String section, String author,
@@ -24,6 +28,16 @@ public class ParselyModel{
         this.tags = tags;
         this.metadata = metadata;
         this.name = name;
+    }
+
+    public <T extends ParselyModel> T getAs(kAspect aspect){
+        switch(aspect){
+            case kPost:
+                return (T)this.getAsPost();
+            case kAuthor:
+                return (T)this.getAsAuthor();
+        }
+        return (T)this.getAsPost();
     }
 
     public Post getAsPost(){
