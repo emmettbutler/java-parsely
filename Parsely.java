@@ -64,21 +64,37 @@ public class Parsely{
         return metaDetail(value, aspect, options);
     }
 
-    public ArrayList<Referrer> referrers(ParselyModel.kRefType r_type){
-        return null;
+    public ArrayList<Referrer> referrers(ParselyModel.kRefType r_type,
+                                         String section, String tag, String domain,
+                                         RequestOptions options){
+        Map<String, Object> customOptions = new HashMap<String, Object>();
+        customOptions.put("section", section);
+        customOptions.put("tag", tag);
+        customOptions.put("domain", domain);
+
+        APIResult result = this.conn.requestEndpoint(
+            String.format("/referrers/%s", ParselyModel.refTypeStrings.get(r_type)),
+            options, customOptions);
+        ArrayList<Referrer> ret = typeEntries(result.getData(), ParselyModel.kAspect.kReferrer);
+        for(Referrer ref : ret){
+            ref.setRefType(ParselyModel.refTypeStrings.get(r_type));
+        }
+        return ret;
     }
 
 
     public static void main(String[] args){
         Parsely p = new Parsely(Secret.apikey, Secret.secret);
         RequestOptions options = RequestOptions.builder()
-                                               .withDays(10)
+                                               .withLimit(7)
+                                               .withDays(3)
                                                .build();
 
         ArrayList<Post> posts = p.analytics(ParselyModel.kAspect.kPost, options);
 
-        System.out.println(p.metaDetail(posts.get(0),
-            ParselyModel.kAspect.kSection, options));
+        p.metaDetail(posts.get(0), ParselyModel.kAspect.kSection, options);
+        ArrayList refs = p.referrers(ParselyModel.kRefType.kSocial, "", "", "", options);
+        System.out.println(refs);
     }
 
     private ArrayList typeEntries(ArrayList<ParselyModel> entries,

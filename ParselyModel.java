@@ -12,7 +12,7 @@ public class ParselyModel{
     //protected Date pub_date;
 
     public static enum kAspect{
-        kPost, kAuthor, kSection, kTag
+        kPost, kAuthor, kSection, kTag, kReferrer
     };
     public static enum kRefType{
         kSocial, kSearch, kOther, kInternal
@@ -54,6 +54,8 @@ public class ParselyModel{
                 return (T)this.getAsPost();
             case kAuthor:
                 return (T)this.getAsAuthor();
+            case kReferrer:
+                return (T)this.getAsReferrer();
         }
         return (T)this.getAsPost();
     }
@@ -147,11 +149,6 @@ class ParselyMeta extends ParselyModel{
     protected String name;
     protected int hits;
 
-    private enum kIdType{
-        kAuthor, kTopic, kSection, kTag, kReferrer
-    };
-    private kIdType idType;
-
     public ParselyMeta(String name, int hits){
         this.name = name;
         this.hits = hits;
@@ -185,8 +182,18 @@ class Topic extends ParselyMeta{
 }
 
 class Referrer extends ParselyMeta{
+    private String ref_type;
+
     public Referrer (ParselyModel pm){
         super(pm.name, pm.hits);
+    }
+
+    public void setRefType(String t){
+        this.ref_type = t;
+    }
+
+    public String getRefType(){
+        return this.ref_type;
     }
 }
 
