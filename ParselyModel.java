@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.lang.reflect.Type;
 
 import com.google.gson.*;
@@ -12,6 +14,22 @@ public class ParselyModel{
     public static enum kAspect{
         kPost, kAuthor, kSection, kTag
     };
+    public static enum kRefType{
+        kSocial, kSearch, kOther, kInternal
+    };
+    public static Map<kAspect, String> aspectStrings = new HashMap<kAspect, String>();
+    public static Map<kRefType, String> refTypeStrings = new HashMap<kRefType, String>();
+    static{
+        aspectStrings.put(kAspect.kPost, "posts");
+        aspectStrings.put(kAspect.kAuthor, "authors");
+        aspectStrings.put(kAspect.kSection, "sections");
+        aspectStrings.put(kAspect.kTag, "tags");
+
+        refTypeStrings.put(kRefType.kSocial, "social");
+        refTypeStrings.put(kRefType.kSearch, "search");
+        refTypeStrings.put(kRefType.kOther, "other");
+        refTypeStrings.put(kRefType.kInternal, "internal");
+    }
 
     public ParselyModel(){ }
 
@@ -62,32 +80,14 @@ public class ParselyModel{
 
     public Object getField(String fieldname){
         String value = null;
-        if(fieldname == "author"){
+        if(fieldname.equals("author")){
             value = this.author;
-        } else if(fieldname == "section"){
+        } else if(fieldname.equals("section")){
             value = this.section;
-        } else if(fieldname == "topic"){
+        } else if(fieldname.equals("topic")){
             value = this.topic;
         }
         return value;
-    }
-
-    public static String aspectToString(kAspect aspect, boolean plural){
-        switch(aspect){
-            case kPost:
-                if(plural) return "posts";
-                return "post";
-            case kAuthor:
-                if(plural) return "authors";
-                return "author";
-            case kSection:
-                if(plural) return "sections";
-                return "section";
-            case kTag:
-                if(plural) return "tags";
-                return "tag";
-        }
-        return null;
     }
 }
 

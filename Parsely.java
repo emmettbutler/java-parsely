@@ -25,7 +25,7 @@ public class Parsely{
 
     public <T extends ParselyModel> ArrayList<T>
     analytics(ParselyModel.kAspect aspect, RequestOptions options){
-        String _aspect = ParselyModel.aspectToString(aspect, true);
+        String _aspect = ParselyModel.aspectStrings.get(aspect);
 
         APIResult result = this.conn.requestEndpoint(
             String.format("/analytics/%s", _aspect), options);
@@ -47,7 +47,8 @@ public class Parsely{
     public ArrayList<Post> metaDetail(String meta,
                                       ParselyModel.kAspect aspect,
                                       RequestOptions options){
-        String aspect_string = ParselyModel.aspectToString(aspect, false);
+        String aspect_string = ParselyModel.aspectStrings.get(aspect);
+        aspect_string = aspect_string.substring(0, aspect_string.length() - 1);
         APIResult result = this.conn.requestEndpoint(
             String.format("/analytics/%s/%s/detail", aspect_string,
             URLEncoder.encode(meta)), options);
@@ -57,9 +58,16 @@ public class Parsely{
     public ArrayList<Post> metaDetail(ParselyModel meta_obj,
                                       ParselyModel.kAspect aspect,
                                       RequestOptions options){
-        String value = (String)meta_obj.getField(ParselyModel.aspectToString(aspect, false));
+        String aspect_string = ParselyModel.aspectStrings.get(aspect);
+        aspect_string = aspect_string.substring(0, aspect_string.length() - 1);
+        String value = (String)meta_obj.getField(aspect_string);
         return metaDetail(value, aspect, options);
     }
+
+    public ArrayList<Referrer> referrers(ParselyModel.kRefType r_type){
+        return null;
+    }
+
 
     public static void main(String[] args){
         Parsely p = new Parsely(Secret.apikey, Secret.secret);
