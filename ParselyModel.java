@@ -6,7 +6,7 @@ import java.lang.reflect.Type;
 import com.google.gson.*;
 
 public class ParselyModel{
-    protected String url, title, section, author, metadata, topic, name;
+    protected String url, title, section, author, metadata, topic, name, ref_type;
     protected int hits, shares;
     protected ArrayList<String> tags, thumb_urls;
     //protected Date pub_date;
@@ -34,7 +34,7 @@ public class ParselyModel{
     public ParselyModel(){ }
 
     public ParselyModel(String url, String title, String section, String author,
-                String metadata, String topic, String name, int hits, int shares,
+                String metadata, String topic, String name, String type, int hits, int shares,
                 ArrayList<String> tags){
         this.url = url;
         this.title = title;
@@ -46,6 +46,7 @@ public class ParselyModel{
         this.tags = tags;
         this.metadata = metadata;
         this.name = name;
+        this.ref_type = type;
     }
 
     public <T extends ParselyModel> T getAs(kAspect aspect){
@@ -186,6 +187,7 @@ class Referrer extends ParselyMeta{
 
     public Referrer (ParselyModel pm){
         super(pm.name, pm.hits);
+        this.ref_type = pm.ref_type;
     }
 
     public void setRefType(String t){
@@ -217,6 +219,8 @@ class ModelDeserializer implements JsonDeserializer<ParselyModel> {
             null : js.get("topic").getAsString();
         String _name = js.get("name") == null ?
             null : js.get("name").getAsString();
+        String _ref_type = js.get("type") == null ?
+            null : js.get("type").getAsString();
         int _shares = js.get("shares") == null ? 0 : js.get("shares").getAsInt();
         int _hits = js.get("_hits") == null ? 0 : js.get("_hits").getAsInt();
 
@@ -230,7 +234,7 @@ class ModelDeserializer implements JsonDeserializer<ParselyModel> {
         }
 
         ParselyModel pm = new ParselyModel(_url, _title, _section, _author,
-                           _metadata, _topic, _name, _hits, _shares, _tags);
+                           _metadata, _topic, _name, _ref_type, _hits, _shares, _tags);
         return pm;
     }
 }
