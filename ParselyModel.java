@@ -226,5 +226,12 @@ class ModelDeserializer implements JsonDeserializer<ParselyModel> {
                            _metadata, _topic, _name, _hits, _shares, _tags);
         return pm;
     }
+}
 
+class APIResult{
+    private ArrayList<ParselyModel> data;
+
+    public ArrayList<ParselyModel> getData(){
+        return this.data;
+    }
 }

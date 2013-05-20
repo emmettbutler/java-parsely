@@ -69,7 +69,8 @@ public class Parsely{
 
         ArrayList<Post> posts = p.analytics(ParselyModel.kAspect.kPost, options);
 
-        System.out.println(p.metaDetail(posts.get(0), ParselyModel.kAspect.kSection, options));
+        System.out.println(p.metaDetail(posts.get(0),
+            ParselyModel.kAspect.kSection, options));
     }
 
     private ArrayList typeEntries(ArrayList<ParselyModel> entries,
