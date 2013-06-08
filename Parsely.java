@@ -28,6 +28,9 @@ public class Parsely{
         this(apikey, null, null);
     }
 
+    public String getApiKey(){ return this.apikey; }
+    public String getSecret(){ return this.secret; }
+
     public boolean isAuthenticated(){
         APIResult result = this.conn.requestEndpoint("/analytics/posts", null);
         ArrayList<Post> arr = typeEntries(result.getData(),
