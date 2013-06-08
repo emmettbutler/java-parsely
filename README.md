@@ -11,6 +11,26 @@ Getting the Code
 
     git clone http://github.com/emmett9001/java-parsely.git
 
+Compiling
+---------
+
+To compile the libary, use
+
+    make
+
+This runs the compilation script in the `makefile`.
+
+Running the Tests
+-----------------
+
+To run the unit tests, use
+
+    make tests
+    ./run_tests.sh
+
+The `run_tests` script sets the classpath to include JUnit and then runs the
+unit tests found in `Tests.java`.
+
 License
 -------
 
