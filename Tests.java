@@ -10,6 +10,7 @@ public class Tests{
     protected static Parsely p;
     protected static RequestOptions defaultOptions;
     protected static String trainLink = "http://arstechnica.com/gadgets/2013/04/tunein-radio-app-update-makes-it-easier-for-users-to-discover-new-music/";
+    protected static ParselyUser user;
     private static boolean setUpIsDone = false;
 
     @BeforeClass
@@ -24,6 +25,7 @@ public class Tests{
                                        .withLimit(7)
                                        .withDays(3)
                                        .build();
+        user = new ParselyUser(p, "emmett9001");
         setUpIsDone = true;
     }
 
@@ -115,11 +117,20 @@ public class Tests{
 
     @Test
     public void testRelatedUser(){
-        fail("Unimplemented!");
+        ArrayList<Post> posts = user.related(null, defaultOptions);
+        assertTrue(posts.get(3).title != "");
     }
+
+    // ugh no
+    /*@Test
+    public void testHistory(){
+        assertTrue(user.train(trainLink));
+        ArrayList<ParselyModel> urls = user.history();
+        assertTrue(urls.size() > 0);
+    }*/
 
     @Test
     public void testTrain(){
-        fail("Unimplemented!");
+        assertTrue(user.train(trainLink));
     }
 }

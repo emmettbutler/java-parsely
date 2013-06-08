@@ -30,10 +30,11 @@ public class Parsely{
 
     public String getApiKey(){ return this.apikey; }
     public String getSecret(){ return this.secret; }
+    public ParselyAPIConnection getConnection(){ return this.conn; }
 
     public boolean isAuthenticated(){
         APIResult result = this.conn.requestEndpoint("/analytics/posts", null);
-        ArrayList<Post> arr = typeEntries(result.getData(),
+        ArrayList<Post> arr = ParselyModel.typeEntries(result.getData(),
                                           ParselyModel.kAspect.kPost);
         return arr.size() == 0 ? false : true;
     }
@@ -45,7 +46,7 @@ public class Parsely{
         APIResult result = this.conn.requestEndpoint(
             String.format("/analytics/%s", _aspect), options);
 
-        return typeEntries(result.getData(), aspect);
+        return ParselyModel.typeEntries(result.getData(), aspect);
     }
 
     public Post postDetail(String url, RequestOptions options){
@@ -67,7 +68,7 @@ public class Parsely{
         APIResult result = this.conn.requestEndpoint(
             String.format("/analytics/%s/%s/detail", aspect_string,
             URLEncoder.encode(meta)), options);
-        return typeEntries(result.getData(), ParselyModel.kAspect.kPost);
+        return ParselyModel.typeEntries(result.getData(), ParselyModel.kAspect.kPost);
     }
 
     public ArrayList<Post> metaDetail(ParselyModel meta_obj,
@@ -90,7 +91,7 @@ public class Parsely{
         APIResult result = this.conn.requestEndpoint(
             String.format("/referrers/%s", ParselyModel.refTypeStrings.get(r_type)),
             options, customOptions);
-        ArrayList<Referrer> ret = typeEntries(result.getData(), ParselyModel.kAspect.kReferrer);
+        ArrayList<Referrer> ret = ParselyModel.typeEntries(result.getData(), ParselyModel.kAspect.kReferrer);
         for(Referrer ref : ret){
             ref.setRefType(ParselyModel.refTypeStrings.get(r_type));
         }
@@ -109,7 +110,7 @@ public class Parsely{
                 ParselyModel.refTypeStrings.get(r_type),
                 ParselyModel.aspectStrings.get(meta)),
             options, customOptions);
-        return typeEntries(result.getData(), meta);
+        return ParselyModel.typeEntries(result.getData(), meta);
     }
 
     public ArrayList<Post>
@@ -128,7 +129,7 @@ public class Parsely{
                 aspect_string,
                 URLEncoder.encode(meta)),
             options, customOptions);
-        return typeEntries(result.getData(), ParselyModel.kAspect.kPost);
+        return ParselyModel.typeEntries(result.getData(), ParselyModel.kAspect.kPost);
     }
 
     public ArrayList<Post>
@@ -148,7 +149,7 @@ public class Parsely{
 
         APIResult result = this.conn.requestEndpoint(
             "/referrers/post/detail", options, customOptions);
-        return typeEntries(result.getData(), ParselyModel.kAspect.kReferrer);
+        return ParselyModel.typeEntries(result.getData(), ParselyModel.kAspect.kReferrer);
     }
 
     public ArrayList<Referrer>
@@ -162,7 +163,7 @@ public class Parsely{
         APIResult res = this.conn.requestEndpoint(
             String.format("/shares/%s", ParselyModel.aspectStrings.get(aspect)),
             options);
-        return typeEntries(res.getData(), aspect);
+        return ParselyModel.typeEntries(res.getData(), aspect);
     }
 
     public Shares
@@ -185,7 +186,7 @@ public class Parsely{
         APIResult res = this.conn.requestEndpoint(
             String.format("/realtime/%s", ParselyModel.aspectStrings.get(aspect)),
             options);
-        return typeEntries(res.getData(), ParselyModel.kAspect.kPost);
+        return ParselyModel.typeEntries(res.getData(), ParselyModel.kAspect.kPost);
     }
 
     public ArrayList<Post> related(String url, RequestOptions options){
@@ -193,7 +194,7 @@ public class Parsely{
         customOptions.put("url", url);
 
         APIResult res = this.conn.requestEndpoint("/related", options, customOptions);
-        return typeEntries(res.getData(), ParselyModel.kAspect.kPost);
+        return ParselyModel.typeEntries(res.getData(), ParselyModel.kAspect.kPost);
     }
 
     public ArrayList<Post> related(Post post, RequestOptions options){
@@ -205,18 +206,6 @@ public class Parsely{
         customOptions.put("q", query);
 
         APIResult res = this.conn.requestEndpoint("/search", options, customOptions);
-        return typeEntries(res.getData(), ParselyModel.kAspect.kPost);
-    }
-
-    private ArrayList typeEntries(ArrayList<ParselyModel> entries,
-                                  ParselyModel.kAspect aspect){
-        ArrayList ret = new ArrayList();
-        try{
-            for(ParselyModel pm : entries){
-                ret.add(pm.getAs(aspect));
-            }
-        } catch(NullPointerException ex){
-        }
-        return ret;
+        return ParselyModel.typeEntries(res.getData(), ParselyModel.kAspect.kPost);
     }
 }

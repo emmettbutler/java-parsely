@@ -106,6 +106,18 @@ public class ParselyModel{
         }
         return value;
     }
+
+    public static ArrayList typeEntries(ArrayList<ParselyModel> entries,
+                                  ParselyModel.kAspect aspect){
+        ArrayList ret = new ArrayList();
+        try{
+            for(ParselyModel pm : entries){
+                ret.add(pm.getAs(aspect));
+            }
+        } catch(NullPointerException ex){
+        }
+        return ret;
+    }
 }
 
 class Post extends ParselyModel{
@@ -292,8 +304,13 @@ class ModelDeserializer implements JsonDeserializer<ParselyModel> {
 
 class APIResult{
     private ArrayList<ParselyModel> data;
+    private boolean success;
 
     public ArrayList<ParselyModel> getData(){
         return this.data;
+    }
+
+    public boolean getSuccess(){
+        return this.success;
     }
 }

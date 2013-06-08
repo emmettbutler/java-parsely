@@ -27,8 +27,9 @@ public class ParselyAPIConnection{
         this.rooturl = root == null ? "http://api.parsely.com/v2" : root;
     }
 
-    public APIResult requestEndpoint(String endpoint, RequestOptions options,
-                                     Map<String, Object> customOptions){
+    public APIResult _requestEndpoint(String endpoint, RequestOptions options,
+                                       Map<String, Object> customOptions, boolean def){
+
         String url = this.rooturl + endpoint + String.format("?apikey=%s&", this.apikey);
         url += (this.secret != "") ? String.format("secret=%s&", this.secret) : "";
 
@@ -45,11 +46,18 @@ public class ParselyAPIConnection{
         //System.out.println(res);
 
         GsonBuilder gs = new GsonBuilder();
-        gs.registerTypeAdapter(ParselyModel.class, new ModelDeserializer());
+        if(!def){
+            gs.registerTypeAdapter(ParselyModel.class, new ModelDeserializer());
+        }
         Gson gson = gs.create();
         APIResult d = gson.fromJson(res, APIResult.class);
 
         return d;
+    }
+
+    public APIResult requestEndpoint(String endpoint, RequestOptions options,
+                                     Map<String, Object> customOptions){
+        return _requestEndpoint(endpoint, options, customOptions, false);
     }
 
     public APIResult requestEndpoint(String endpoint, RequestOptions options){
@@ -64,7 +72,7 @@ public class ParselyAPIConnection{
         System.out.println(po.getName());
     }
 
-    private String getJSON(String url, int timeout){
+    public String getJSON(String url, int timeout){
         try{
             URL u = new URL(url);
             HttpURLConnection c = (HttpURLConnection) u.openConnection();
