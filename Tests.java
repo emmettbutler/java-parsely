@@ -80,13 +80,18 @@ public class Tests{
 
     @Test
     public void testShares(){
-        ArrayList<Author> posts = p.shares(ParselyModel.kAspect.kAuthor, "", defaultOptions);
+        ArrayList<Author> posts = p.shares(ParselyModel.kAspect.kAuthor, defaultOptions);
         assertTrue(posts.get(0).name != "");
     }
 
     @Test
     public void testSharesDetail(){
-        fail("Unimplemented!");
+        Shares shares = p.shares_detail(ParselyModel.kAspect.kSection, trainLink, defaultOptions);
+        assertTrue(shares.total > 0);
+        assertTrue(shares.fb > 0);
+        assertTrue(shares.tw > 0);
+        assertTrue(shares.li > 0);
+        assertTrue(shares.pi > 0);
     }
 
     @Test

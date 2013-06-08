@@ -158,19 +158,26 @@ public class Parsely{
     }
 
     public <T extends ParselyModel> ArrayList<T>
-    shares(ParselyModel.kAspect aspect, String url, RequestOptions options){
+    shares(ParselyModel.kAspect aspect, RequestOptions options){
+        APIResult res = this.conn.requestEndpoint(
+            String.format("/shares/%s", ParselyModel.aspectStrings.get(aspect)),
+            options);
+        return typeEntries(res.getData(), aspect);
+    }
+
+    public Shares
+    shares_detail(ParselyModel.kAspect aspect, String url, RequestOptions options){
         Map<String, Object> customOptions = new HashMap<String, Object>();
         customOptions.put("url", url == null ? "" : url);
 
         APIResult res = this.conn.requestEndpoint(
-            String.format("/shares/%s", ParselyModel.aspectStrings.get(aspect)),
-            options, customOptions);
-        return typeEntries(res.getData(), aspect);
+            "/shares/post/detail", options, customOptions);
+        return res.getData().get(0).getAsShares();
     }
 
-    public <T extends ParselyModel> ArrayList<T>
-    shares(ParselyModel.kAspect aspect, Post post, RequestOptions options){
-        return shares(aspect, post.getUrl(), options);
+    public Shares
+    shares_detail(ParselyModel.kAspect aspect, Post post, RequestOptions options){
+        return shares_detail(aspect, post.getUrl(), options);
     }
 
     public ArrayList<Post> realtime(ParselyModel.kAspect aspect,
@@ -199,33 +206,6 @@ public class Parsely{
 
         APIResult res = this.conn.requestEndpoint("/search", options, customOptions);
         return typeEntries(res.getData(), ParselyModel.kAspect.kPost);
-    }
-
-
-    public static void main(String[] args){
-        Parsely p = null;
-        try{
-            p = new Parsely(Secret.apikey, Secret.secret);
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-        RequestOptions options = RequestOptions.builder()
-                                               .withLimit(7)
-                                               .withDays(3)
-                                               .build();
-
-        ArrayList<Post> posts = p.analytics(ParselyModel.kAspect.kPost, options);
-
-        p.metaDetail(posts.get(0), ParselyModel.kAspect.kSection, options);
-        ArrayList refs = p.referrers(ParselyModel.kRefType.kSocial, "", "", "", options);
-        System.out.println(refs);
-        p.referrers_meta(ParselyModel.kRefType.kSearch,
-                         ParselyModel.kAspect.kAuthor, "", "", options);
-
-        p.referrers_meta_detail(posts.get(0), ParselyModel.kRefType.kSearch,
-                                ParselyModel.kAspect.kAuthor, "", options);
-
-        System.out.println(p.referrers_post_detail(posts.get(0), options).get(0).getRefType());
     }
 
     private ArrayList typeEntries(ArrayList<ParselyModel> entries,

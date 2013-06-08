@@ -10,7 +10,7 @@ import com.google.gson.*;
 
 public class ParselyModel{
     protected String url, title, section, author, metadata, topic, name, ref_type;
-    protected int hits, shares;
+    protected int hits, shares, fb, tw, pi, li, total;
     protected ArrayList<String> tags, thumb_urls;
     protected Date pub_date;
 
@@ -38,7 +38,8 @@ public class ParselyModel{
 
     public ParselyModel(String url, String title, String section, String author,
                 String metadata, String topic, String name, String type,
-                Date date, int hits, int shares, ArrayList<String> tags){
+                Date date, int hits, int shares, ArrayList<String> tags,
+                int fb, int tw, int pi, int li, int total){
         this.url = url;
         this.title = title;
         this.section = section;
@@ -51,6 +52,11 @@ public class ParselyModel{
         this.name = name;
         this.ref_type = type;
         this.pub_date = date;
+        this.fb = fb;
+        this.tw = tw;
+        this.pi = pi;
+        this.li = li;
+        this.total = total;
     }
 
     public <T extends ParselyModel> T getAs(kAspect aspect){
@@ -83,6 +89,10 @@ public class ParselyModel{
 
     public Referrer getAsReferrer(){
         return new Referrer(this);
+    }
+
+    public Shares getAsShares(){
+        return new Shares(this);
     }
 
     public Object getField(String fieldname){
@@ -204,6 +214,22 @@ class Referrer extends ParselyMeta{
     }
 }
 
+class Shares{
+    protected int fb, tw, pi, li, total;
+
+    public Shares(ParselyModel pm){
+        this(pm.fb, pm.tw, pm.pi, pm.li, pm.total);
+    }
+
+    public Shares(int fb, int tw, int pi, int li, int total){
+        this.fb = fb;
+        this.tw = tw;
+        this.pi = pi;
+        this.li = li;
+        this.total = total;
+    }
+}
+
 class ModelDeserializer implements JsonDeserializer<ParselyModel> {
     public ParselyModel deserialize(JsonElement json, Type typeOfT,
                                     JsonDeserializationContext context)
@@ -226,6 +252,16 @@ class ModelDeserializer implements JsonDeserializer<ParselyModel> {
             null : js.get("name").getAsString();
         String _ref_type = js.get("type") == null ?
             null : js.get("type").getAsString();
+        int _fb = js.get("fb") == null ?
+            0 : js.get("fb").getAsInt();
+        int _tw = js.get("tw") == null ?
+            0 : js.get("tw").getAsInt();
+        int _pi = js.get("pi") == null ?
+            0 : js.get("pi").getAsInt();
+        int _li = js.get("li") == null ?
+            0 : js.get("li").getAsInt();
+        int _total = js.get("total") == null ?
+            0 : js.get("total").getAsInt();
 
         String datestring = js.get("pub_date") == null ?
             null : js.get("pub_date").getAsString();
@@ -248,7 +284,8 @@ class ModelDeserializer implements JsonDeserializer<ParselyModel> {
         }
 
         ParselyModel pm = new ParselyModel(_url, _title, _section, _author,
-                           _metadata, _topic, _name, _ref_type, _date, _hits, _shares, _tags);
+                           _metadata, _topic, _name, _ref_type, _date, _hits, _shares, _tags,
+                           _fb, _tw, _pi, _li, _total);
         return pm;
     }
 }
