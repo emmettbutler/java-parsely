@@ -11,15 +11,6 @@ Getting the Code
 
     git clone http://github.com/emmett9001/java-parsely.git
 
-Compiling
----------
-
-To compile the libary, use
-
-    make
-
-This runs the compilation script in the `makefile`.
-
 Running the Tests
 -----------------
 
