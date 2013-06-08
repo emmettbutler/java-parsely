@@ -52,4 +52,23 @@ public class Tests{
         ArrayList<Post> posts = p.metaDetail("Technology Lab", ParselyModel.kAspect.kSection, defaultOptions);
         assertEquals(posts.get(0).section, "Technology Lab");
     }
+
+    @Test
+    public void testReferrers(){
+        ArrayList<Referrer> refs = p.referrers(ParselyModel.kRefType.kSearch, null, "copyright", null, defaultOptions);
+        System.out.println(refs.get(0).hits);
+        assertTrue(refs.get(0).hits > 0);
+    }
+
+    @Test
+    public void testReferrersMeta(){
+        ArrayList<Author> authors = p.referrers_meta(ParselyModel.kRefType.kSearch, ParselyModel.kAspect.kAuthor, null, null, defaultOptions);
+        assertTrue(authors.get(0).hits > 0);
+    }
+
+    @Test
+    public void testReferrersMetaDetail(){
+        ArrayList<Post> posts = p.referrers_meta_detail("Ars Staff", ParselyModel.kRefType.kSearch, ParselyModel.kAspect.kAuthor, null, defaultOptions);
+        assertEquals(posts.get(3).author, "Ars Staff");
+    }
 }

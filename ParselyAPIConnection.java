@@ -39,9 +39,10 @@ public class ParselyAPIConnection{
         }
 
         url += options == null ? "" : options.getAsQueryString();
-        //System.out.println(url);
+        System.out.println(url);
 
         String res = getJSON(url, 20000);
+        System.out.println(res);
 
         GsonBuilder gs = new GsonBuilder();
         gs.registerTypeAdapter(ParselyModel.class, new ModelDeserializer());

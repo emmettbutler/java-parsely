@@ -83,9 +83,9 @@ public class Parsely{
                                          String section, String tag, String domain,
                                          RequestOptions options){
         Map<String, Object> customOptions = new HashMap<String, Object>();
-        customOptions.put("section", section);
-        customOptions.put("tag", tag);
-        customOptions.put("domain", domain);
+        customOptions.put("section", section == null ? "" : section);
+        customOptions.put("tag", tag == null ? "" : tag);
+        customOptions.put("domain", domain == null ? "" : domain);
 
         APIResult result = this.conn.requestEndpoint(
             String.format("/referrers/%s", ParselyModel.refTypeStrings.get(r_type)),
@@ -101,8 +101,8 @@ public class Parsely{
     referrers_meta(ParselyModel.kRefType r_type, ParselyModel.kAspect meta,
                    String section, String domain, RequestOptions options){
         Map<String, Object> customOptions = new HashMap<String, Object>();
-        customOptions.put("section", section);
-        customOptions.put("domain", domain);
+        customOptions.put("section", section == null ? "" : section);
+        customOptions.put("domain", domain == null ? "" : domain);
 
         APIResult result = this.conn.requestEndpoint(
             String.format("/referrers/%s/%s",
@@ -117,7 +117,7 @@ public class Parsely{
                           ParselyModel.kAspect aspect, String domain,
                           RequestOptions options){
         Map<String, Object> customOptions = new HashMap<String, Object>();
-        customOptions.put("domain", domain);
+        customOptions.put("domain", domain == null ? "" : domain);
 
         String aspect_string = ParselyModel.aspectStrings.get(aspect);
         aspect_string = aspect_string.substring(0, aspect_string.length() - 1);
