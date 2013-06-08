@@ -229,12 +229,11 @@ class ModelDeserializer implements JsonDeserializer<ParselyModel> {
 
         String datestring = js.get("pub_date") == null ?
             null : js.get("pub_date").getAsString();
-        DateFormat formatter = new SimpleDateFormat("YYYY-MM-DD'T'HH:MM:SS");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date _date = null;
         try{
             _date = formatter.parse(datestring);
-        } catch(Exception ex){
-        }
+        } catch(Exception ex){}
 
         int _shares = js.get("shares") == null ? 0 : js.get("shares").getAsInt();
         int _hits = js.get("_hits") == null ? 0 : js.get("_hits").getAsInt();
