@@ -6,22 +6,24 @@ JC = javac
 
 
 CLASSES = \
-        Parsely.java \
-        ParselyAPIConnection.java \
-        ParselyModel.java \
-        RequestOptions.java \
-        Secret.java
+        src/Parsely.java \
+        src/ParselyAPIConnection.java \
+        src/ParselyUser.java \
+        src/ParselyModel.java \
+        src/RequestOptions.java \
+        src/Secret.java
 
 .java.class:
 		$(JC) $(JFLAGS) -classpath ".:$(GSONJAR)" $(CLASSES)
 
 TESTCLASSES = \
-        Parsely.java \
-        ParselyAPIConnection.java \
-        ParselyModel.java \
-        RequestOptions.java \
-        Secret.java \
-        Tests.java
+        src/Parsely.java \
+        src/ParselyUser.java \
+        src/ParselyAPIConnection.java \
+        src/ParselyModel.java \
+        src/RequestOptions.java \
+        src/Secret.java \
+        src/Tests.java
 
 default: classes
 
@@ -31,4 +33,4 @@ tests:
 classes: $(CLASSES:.java=.class)
 
 clean:
-		$(RM) *.class .*.swp .*.un~
+		$(RM) *.class .*.swp .*.un~ src/*.class src/.*.swp src/.*.un~
