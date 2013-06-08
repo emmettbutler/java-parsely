@@ -8,6 +8,7 @@ import org.junit.BeforeClass;
 
 public class Tests{
     protected static Parsely p;
+    protected static RequestOptions defaultOptions;
     private static boolean setUpIsDone = false;
 
     @BeforeClass
@@ -18,6 +19,10 @@ public class Tests{
         } catch(IOException e){
             e.printStackTrace();
         }
+        defaultOptions = RequestOptions.builder()
+                                       .withLimit(7)
+                                       .withDays(3)
+                                       .build();
         setUpIsDone = true;
     }
 
@@ -29,11 +34,22 @@ public class Tests{
 
     @Test
     public void testAnalytics(){
-        RequestOptions options = RequestOptions.builder()
-                                               .withLimit(7)
-                                               .withDays(3)
-                                               .build();
-        ArrayList<Post> posts = p.analytics(ParselyModel.kAspect.kPost, options);
+        ArrayList<Post> posts = p.analytics(ParselyModel.kAspect.kPost, defaultOptions);
         assertEquals(posts.size(), 7);
+        assertTrue(posts.get(0).hits > 0);
+    }
+
+    @Test
+    public void testPostDetail(){
+        Post post = p.postDetail("http://arstechnica.com/science/2013/04/inside-science-selling-and-upsizing-the-meal/", defaultOptions);
+        Post post2 = p.postDetail(post, defaultOptions);
+        assertTrue(post.hits > 0);
+        assertEquals(post.hits, post2.hits);
+    }
+
+    @Test
+    public void testMetaDetail(){
+        ArrayList<Post> posts = p.metaDetail("Technology Lab", ParselyModel.kAspect.kSection, defaultOptions);
+        assertEquals(posts.get(0).section, "Technology Lab");
     }
 }
