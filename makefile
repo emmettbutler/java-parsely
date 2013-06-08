@@ -1,5 +1,5 @@
-GSONJAR = gson-2.2.4.jar
-TESTJAR = junit-4.10.jar
+GSONJAR = lib/gson-2.2.4.jar
+TESTJAR = lib/junit-4.10.jar
 JFLAGS = -g
 JC = javac
 .SUFFIXES: .java .class
