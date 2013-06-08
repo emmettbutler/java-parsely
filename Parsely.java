@@ -160,7 +160,7 @@ public class Parsely{
     public <T extends ParselyModel> ArrayList<T>
     shares(ParselyModel.kAspect aspect, String url, RequestOptions options){
         Map<String, Object> customOptions = new HashMap<String, Object>();
-        customOptions.put("url", url);
+        customOptions.put("url", url == null ? "" : url);
 
         APIResult res = this.conn.requestEndpoint(
             String.format("/shares/%s", ParselyModel.aspectStrings.get(aspect)),

@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 public class Tests{
     protected static Parsely p;
     protected static RequestOptions defaultOptions;
+    protected static String trainLink = "http://arstechnica.com/gadgets/2013/04/tunein-radio-app-update-makes-it-easier-for-users-to-discover-new-music/";
     private static boolean setUpIsDone = false;
 
     @BeforeClass
@@ -56,7 +57,6 @@ public class Tests{
     @Test
     public void testReferrers(){
         ArrayList<Referrer> refs = p.referrers(ParselyModel.kRefType.kSearch, null, "copyright", null, defaultOptions);
-        System.out.println(refs.get(0).hits);
         assertTrue(refs.get(0).hits > 0);
     }
 
@@ -70,5 +70,51 @@ public class Tests{
     public void testReferrersMetaDetail(){
         ArrayList<Post> posts = p.referrers_meta_detail("Ars Staff", ParselyModel.kRefType.kSearch, ParselyModel.kAspect.kAuthor, null, defaultOptions);
         assertEquals(posts.get(3).author, "Ars Staff");
+    }
+
+    @Test
+    public void testReferrersPostDetail(){
+        ArrayList<Referrer> referrers = p.referrers_post_detail("http://arstechnica.com/information-technology/2013/04/memory-that-never-forgets-non-volatile-dimms-hit-the-market/", defaultOptions);
+        assertTrue(referrers.get(0).hits > 0);
+    }
+
+    @Test
+    public void testShares(){
+        ArrayList<Author> posts = p.shares(ParselyModel.kAspect.kAuthor, "", defaultOptions);
+        assertTrue(posts.get(0).name != "");
+    }
+
+    @Test
+    public void testSharesDetail(){
+        fail("Unimplemented!");
+    }
+
+    @Test
+    public void testRealtime(){
+        ArrayList<Post> posts = p.realtime(ParselyModel.kAspect.kAuthor, defaultOptions);
+        assertTrue(posts.get(3).title != "");
+        assertTrue(posts.size() == 7);
+    }
+
+    @Test
+    public void testSearch(){
+        ArrayList<Post> posts = p.search("security", defaultOptions);
+        assertTrue(posts.get(2).title != "");
+    }
+
+    @Test
+    public void testRelatedUrl(){
+        ArrayList<Post> posts = p.related(trainLink, defaultOptions);
+        assertTrue(posts.get(3).title != "");
+    }
+
+    @Test
+    public void testRelatedUser(){
+        fail("Unimplemented!");
+    }
+
+    @Test
+    public void testTrain(){
+        fail("Unimplemented!");
     }
 }
