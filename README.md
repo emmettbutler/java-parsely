@@ -3,6 +3,8 @@ Parsely API Java Binding
 
 This library provides a pure Java interface to the Parsely API. The
 documentation on which this binding is based is located at http://parsely.com/api/api\_ref.html
+The project uses Apache Maven. To compile and run, you should first install
+Maven usng the instructions at http://maven.apache.org/download.cgi
 
 Getting the Code
 ----------------
