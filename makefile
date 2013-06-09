@@ -16,14 +16,7 @@ CLASSES = \
 .java.class:
 		$(JC) $(JFLAGS) -classpath ".:$(GSONJAR)" $(CLASSES)
 
-TESTCLASSES = \
-        src/Parsely.java \
-        src/ParselyUser.java \
-        src/ParselyAPIConnection.java \
-        src/ParselyModel.java \
-        src/RequestOptions.java \
-        src/Secret.java \
-        src/Tests.java
+TESTCLASSES = $(CLASSES) src/Tests.java
 
 default: classes
 
