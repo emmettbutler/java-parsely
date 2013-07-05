@@ -86,7 +86,7 @@ public class Tests{
 
     @Test
     public void testSharesDetail(){
-        Shares shares = p.shares_detail(ParselyModel.kAspect.kSection, trainLink, defaultOptions);
+        Shares shares = p.shares_detail(trainLink, defaultOptions);
         assertTrue(shares.total > 0);
         assertTrue(shares.fb > 0);
         assertTrue(shares.tw > 0);
