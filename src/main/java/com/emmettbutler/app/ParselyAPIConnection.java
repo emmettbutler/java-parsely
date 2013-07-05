@@ -9,6 +9,10 @@ import java.io.IOException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+
+/*
+ *  Class modeling a non-persistent connection to the Parsely API
+ */
 public class ParselyAPIConnection{
     private String apikey, secret, rooturl;
 
@@ -27,8 +31,21 @@ public class ParselyAPIConnection{
         this.rooturl = root == null ? "http://api.parsely.com/v2" : root;
     }
 
+    /*
+     *  Make a synchronous GET request to the given endpoint
+     *
+     *  Uses options and customOptions as a template for the construction of
+     *  the query string
+     *
+     *  @param  endpoint        the API endpoint to request
+     *  @param  options         the basic request options to be serialized and sent
+     *  @param  customOptions   special options
+     *      serialized into a query string such that key=value&
+     *  @param  def             use the default JSON deserializer
+     *  @return the deserialized request result
+     */
     public APIResult _requestEndpoint(String endpoint, RequestOptions options,
-                                       Map<String, Object> customOptions, boolean def){
+                                      Map<String, Object> customOptions, boolean def){
 
         String url = this.rooturl + endpoint + String.format("?apikey=%s&", this.apikey);
         url += (this.secret != "") ? String.format("secret=%s&", this.secret) : "";
@@ -64,14 +81,13 @@ public class ParselyAPIConnection{
         return this.requestEndpoint(endpoint, options, null);
     }
 
-    public static void main(String[] args){
-        ParselyAPIConnection p = new ParselyAPIConnection(Secret.apikey,
-                                                          Secret.secret);
-        APIResult res = p.requestEndpoint("/analytics/topics", null);
-        Topic po = res.getData().get(0).getAsTopic();
-        System.out.println(po.getName());
-    }
-
+    /*
+     *  Get a JSON string from the given URL
+     *
+     *  @param  url
+     *  @param  timeout how many milliseconds to wait before failing
+     *  @return the json string
+     */
     public String getJSON(String url, int timeout){
         try{
             URL u = new URL(url);
@@ -105,4 +121,3 @@ public class ParselyAPIConnection{
         return null;
     }
 }
-

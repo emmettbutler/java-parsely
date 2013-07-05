@@ -2,6 +2,9 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 
+/*
+ *  Class modeling the default options common to many Parsely API endpoints
+ */
 public class RequestOptions{
     public static class Builder{
         public RequestOptions build(){
